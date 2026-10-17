@@ -376,7 +376,7 @@ footer{text-align:center;padding:28px 20px 50px;font-family:var(--hand);color:va
 <div id="floaters" aria-hidden="true"></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
 <audio id="birthdayMusic" preload="auto" loop>
-  <source src="./birthday-song.mp3" type="audio/mpeg">
+  <source src="_Nanbiye_Teddy_Song_Tamil_Ringtone_(by Fringster.com).mp3" type="audio/mpeg">
 </audio>
 <nav class="nav" id="nav" aria-label="Sections">
   <a href="#welcome">Welcome</a>
@@ -540,6 +540,9 @@ footer{text-align:center;padding:28px 20px 50px;font-family:var(--hand);color:va
 </section>
 
 <!-- =====================  8. SURPRISE  ===================== -->
+   <audio id="surpriseMusic" loop>
+  <source src="Magale-1-Downringtone.com.mp3" type="audio/mpeg">
+</audio>
 <section id="surprise" aria-labelledby="sur-title">
   <div class="reveal">
     <p class="eyebrow">one last thing</p>
@@ -977,13 +980,13 @@ var FLIPS = [
   });
   $("#confettiBtn").addEventListener("click", function () { confetti(180); });
 
-  // Final envelope
-   
-  // Final envelope + birthday music
+
+  // Final envelope + separate music
   var env = $("#envelope");
   var finalMsg = $("#finalMsg");
   var hint = $("#envHint");
   var birthdayMusic = $("#birthdayMusic");
+  var surpriseMusic = $("#surpriseMusic");
 
   env.addEventListener("click", function () {
     var open = env.classList.toggle("open");
@@ -992,18 +995,20 @@ var FLIPS = [
     if (open) {
       hint.style.display = "none";
 
-      // Play the Tamil birthday song when the envelope opens
+      // Stop the letter song if it is playing
       if (birthdayMusic) {
-        birthdayMusic.volume = 0.65;
+        birthdayMusic.pause();
         birthdayMusic.currentTime = 0;
+      }
 
-        var playPromise = birthdayMusic.play();
+      // Play the surprise song
+      if (surpriseMusic) {
+        surpriseMusic.volume = 0.65;
+        surpriseMusic.currentTime = 0;
 
-        if (playPromise !== undefined) {
-          playPromise.catch(function () {
-            toast("Tap the music play button to hear the song 🎵");
-          });
-        }
+        surpriseMusic.play().catch(function () {
+          toast("Check that surprise-song.mp3 is uploaded beside index.html 🎵");
+        });
       }
 
       setTimeout(function () {
@@ -1019,10 +1024,10 @@ var FLIPS = [
       finalMsg.classList.remove("show");
       hint.style.display = "";
 
-      // Stop and reset the song when the envelope closes
-      if (birthdayMusic) {
-        birthdayMusic.pause();
-        birthdayMusic.currentTime = 0;
+      // Stop and reset the surprise song
+      if (surpriseMusic) {
+        surpriseMusic.pause();
+        surpriseMusic.currentTime = 0;
       }
     }
   });
@@ -1031,8 +1036,5 @@ var FLIPS = [
   window.addEventListener("unhandledrejection", function (e) { console.error("Unhandled promise:", e.reason); });
 })();
 </script>
-   <audio id="birthdayMusic" preload="auto" loop>
-  <source src="_Nanbiye_Teddy_Song_Tamil_Ringtone_(by Fringster.com).mp3" type="audio/mpeg">
-</audio>
 </body>
 </html>
