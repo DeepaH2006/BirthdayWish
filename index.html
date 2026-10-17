@@ -375,7 +375,9 @@ footer{text-align:center;padding:28px 20px 50px;font-family:var(--hand);color:va
 <a class="skip" href="#letter">Skip to content</a>
 <div id="floaters" aria-hidden="true"></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
-
+<audio id="birthdayMusic" preload="auto" loop>
+  <source src="./birthday-song.mp3" type="audio/mpeg">
+</audio>
 <nav class="nav" id="nav" aria-label="Sections">
   <a href="#welcome">Welcome</a>
   <a href="#letter">Letter</a>
@@ -976,24 +978,61 @@ var FLIPS = [
   $("#confettiBtn").addEventListener("click", function () { confetti(180); });
 
   // Final envelope
-  var env = $("#envelope"), finalMsg = $("#finalMsg"), hint = $("#envHint");
+   
+  // Final envelope + birthday music
+  var env = $("#envelope");
+  var finalMsg = $("#finalMsg");
+  var hint = $("#envHint");
+  var birthdayMusic = $("#birthdayMusic");
+
   env.addEventListener("click", function () {
     var open = env.classList.toggle("open");
     env.setAttribute("aria-expanded", String(open));
+
     if (open) {
       hint.style.display = "none";
+
+      // Play the Tamil birthday song when the envelope opens
+      if (birthdayMusic) {
+        birthdayMusic.volume = 0.65;
+        birthdayMusic.currentTime = 0;
+
+        var playPromise = birthdayMusic.play();
+
+        if (playPromise !== undefined) {
+          playPromise.catch(function () {
+            toast("Tap the music play button to hear the song 🎵");
+          });
+        }
+      }
+
       setTimeout(function () {
         finalMsg.classList.add("show");
-        finalMsg.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+        finalMsg.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "center"
+        });
         confetti(160);
       }, 900);
-    } else { finalMsg.classList.remove("show"); hint.style.display = ""; }
-  });
 
+    } else {
+      finalMsg.classList.remove("show");
+      hint.style.display = "";
+
+      // Stop and reset the song when the envelope closes
+      if (birthdayMusic) {
+        birthdayMusic.pause();
+        birthdayMusic.currentTime = 0;
+      }
+    }
+  });
   // Global error guard so one failure never breaks the page
   window.addEventListener("error", function (e) { console.error("Memory book error:", e.message); });
   window.addEventListener("unhandledrejection", function (e) { console.error("Unhandled promise:", e.reason); });
 })();
 </script>
+   <audio id="birthdayMusic" preload="auto" loop>
+  <source src="./birthday-song.mp3" type="audio/mpeg">
+</audio>
 </body>
 </html>
